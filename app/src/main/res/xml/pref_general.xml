@@ -10,4 +10,5 @@
         android:inputType="number"
         android:singleLine="true" />
 
+
 </PreferenceScreen>
