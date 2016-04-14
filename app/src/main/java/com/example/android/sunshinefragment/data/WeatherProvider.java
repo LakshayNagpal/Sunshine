@@ -265,21 +265,23 @@ public class WeatherProvider extends ContentProvider {
         // handle.  If it doesn't match these, throw an UnsupportedOperationException.
         final int match = sUriMatcher.match(uri);
         int rowsDeleted;
-        if(null == selection){ selection = "1"; }
+        if ( null == selection ) selection = "1";
         // Student: A null value deletes all rows.  In my implementation of this, I only notified
         // the uri listeners (using the content resolver) if the rowsDeleted != 0 or the selection
         // is null.
         // Oh, and you should notify the listeners here.
-        switch(match){
-            case WEATHER:
-                rowsDeleted = db.delete(WeatherContract.WeatherEntry.TABLE_NAME, selection, selectionArgs);
-                break;
-            case LOCATION:
-                rowsDeleted = db.delete(WeatherContract.LocationEntry.TABLE_NAME, selection, selectionArgs);
-                break;
-            default:
-                throw new UnsupportedOperationException("Unknown uri: " + uri);
-        }
+        switch (match) {
+                        case WEATHER:
+                                rowsDeleted = db.delete(
+                                                WeatherContract.WeatherEntry.TABLE_NAME, selection, selectionArgs);
+                                break;
+                        case LOCATION:
+                                rowsDeleted = db.delete(
+                                                WeatherContract.LocationEntry.TABLE_NAME, selection, selectionArgs);
+                                break;
+                        default:
+                                throw new UnsupportedOperationException("Unknown uri: " + uri);
+                        }
         if(rowsDeleted !=0){
             getContext().getContentResolver().notifyChange(uri, null);
         }
