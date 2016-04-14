@@ -1,10 +1,8 @@
 package com.example.android.sunshinefragment;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -16,11 +14,16 @@ public class MainActivity extends AppCompatActivity {
     ListView listview;
     private final String LOG_TAG = MainActivity.class.getSimpleName();
 
+    private final String FORECASTFRAGMENT_TAG = "FFTAG";
+
+    private String mLocation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.v(LOG_TAG, "in oncreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -53,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        mLocation = Utility.getPreferredLocation(this);
         return true;
     }
 
@@ -79,8 +83,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void openPreferredLocationInMap(){
 
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String location = sharedPrefs.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
+//        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+//        String location = sharedPrefs.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
+
+        String location = Utility.getPreferredLocation(this);
 
         Uri geolocation = Uri.parse("geo:0,0?").buildUpon()
                             .appendQueryParameter("q", location)
@@ -95,8 +101,16 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onResume(){
-        Log.v(LOG_TAG, "in onresume");
         super.onResume();
+        String location = Utility.getPreferredLocation( this );
+        // update the location in our second pane using the fragment manager
+        if (location != null && !location.equals(mLocation)) {
+            ForecastFragment ff = (ForecastFragment)getSupportFragmentManager().findFragmentByTag(FORECASTFRAGMENT_TAG);
+            if ( null != ff ) {
+                ff.onLocationChanged();
+            }
+            mLocation = location;
+        }
     }
 
     @Override
