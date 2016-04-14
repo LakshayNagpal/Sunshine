@@ -85,7 +85,7 @@ public class ForecastFragment extends Fragment {
                 "Wed 6/25 - Cloudy - 22/17",
                 "Thurs 6/26 - Rainy - 18/11",
                 "Fri 6/27 - Foggy - 21/10",
-                "Sat 6/28 - TRAPPED IN WEATHERSTATION - 23/18",
+                "Sat 6/28 - Thunder - 23/18",
                 "Sun 6/29 - Sunny - 20/7"
         };
         List<String> weekForecast = new ArrayList<String>(Arrays.asList(data));
@@ -152,8 +152,15 @@ public class ForecastFragment extends Fragment {
             return shortenedDateFormat.format(time);
         }
 
-        private String formatHighLows(double high, double low) {
+        private String formatHighLows(double high, double low, String unitType) {
             // For presentation, assume the user doesn't care about tenths of a degree.
+
+            if(unitType.equals("imperial")){
+                high = (high * 1.8) + 32;
+                low = (low * 1.8) +32;
+            }else if(!unitType.equals("metric")){
+                Log.d(LOG_TAG, "Unit type not found: " + unitType);
+            }
             long roundedHigh = Math.round(high);
             long roundedLow = Math.round(low);
 
@@ -193,6 +200,9 @@ public class ForecastFragment extends Fragment {
             dayTime = new Time();
 
             String[] resultStrs = new String[numDays];
+
+            SharedPreferences s = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String unitType = s.getString(getString(R.string.pref_syncConnectionType_key),"metric");
             for(int i = 0; i < weatherArray.length(); i++) {
                 // For now, using the format "Day, description, hi/low"
                 String day;
@@ -220,12 +230,12 @@ public class ForecastFragment extends Fragment {
                 double high = temperatureObject.getDouble(OWM_MAX);
                 double low = temperatureObject.getDouble(OWM_MIN);
 
-                highAndLow = formatHighLows(high, low);
+                highAndLow = formatHighLows(high, low, unitType);
                 resultStrs[i] = day + " - " + description + " - " + highAndLow;
             }
 
-            for (String s : resultStrs) {
-                Log.v(LOG_TAG, "Forecast entry: " + s);
+            for (String s1 : resultStrs) {
+                Log.v(LOG_TAG, "Forecast entry: " + s1);
             }
             return resultStrs;
 
@@ -243,6 +253,7 @@ public class ForecastFragment extends Fragment {
             BufferedReader reader = null;
 
             String forecastjson = null;
+            String units = "metric";
             int numDays = 15;
 
             try{
@@ -255,7 +266,7 @@ public class ForecastFragment extends Fragment {
                         .appendPath("daily")
                         .appendQueryParameter("q", params[0])
                         .appendQueryParameter("mode", "json")
-                        .appendQueryParameter("units", "metric")
+                        .appendQueryParameter("units", units)
                         .appendQueryParameter("cnt", Integer.toString(numDays));
                 String myurl = builder.build().toString();
 

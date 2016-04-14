@@ -10,5 +10,12 @@
         android:inputType="number"
         android:singleLine="true" />
 
+    <ListPreference
+        android:key="@string/pref_syncConnectionType_key"
+        android:title="@string/pref_syncConnectionType_title"
+        android:dialogTitle="@string/pref_syncConnectionType_title"
+        android:entries="@array/pref_syncConnectionTypes_entries"
+        android:entryValues="@array/pref_syncConnectionTypes_values"
+        android:defaultValue="metric" />
 
 </PreferenceScreen>
