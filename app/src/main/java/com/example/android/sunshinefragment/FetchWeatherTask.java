@@ -238,6 +238,7 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
                 // Student: call bulkInsert to add the weatherEntries to the database here
                 ContentValues[] cvArray = new ContentValues[cVVector.size()];
                                cVVector.toArray(cvArray);
+                //mContext.getContentResolver().delete(WeatherEntry.CONTENT_URI,null,null);
                 inserted = mContext.getContentResolver().bulkInsert(WeatherEntry.CONTENT_URI, cvArray);
             }
             Log.d(LOG_TAG, "FetchWeatherTask Complete. " + inserted + " Inserted");
@@ -267,7 +268,7 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
 
         String format = "json";
         String units = "metric";
-        int numDays = 14;
+        int numDays = 7;
 
         try {
             Uri.Builder builder = new Uri.Builder();
