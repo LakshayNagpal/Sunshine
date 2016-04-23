@@ -38,11 +38,12 @@ public class DetailActivity extends ActionBarActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-//        if (savedInstanceState == null) {
-//            getSupportFragmentManager().beginTransaction()
-//                    .add(R.id.container, new DetailFragment())
-//                    .commit();
-//        }
+
+        if (savedInstanceState == null) {
+                    getSupportFragmentManager().beginTransaction()
+                    .add(R.id.weather_detail_container, new DetailActivity.DetailFragment())
+                    .commit();
+        }
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         //client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -179,7 +180,7 @@ public class DetailActivity extends ActionBarActivity {
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
             Log.v(LOG_TAG, "In onCreateLoader");
             Intent intent = getActivity().getIntent();
-            if (intent == null) {
+            if (intent == null || intent.getData() == null) {
                 return null;
             }
 

@@ -122,7 +122,7 @@ public class ForecastAdapter extends CursorAdapter {
         ViewHolder holder = (ViewHolder) view.getTag();
 
         // Read weather icon ID from cursor
-        int weatherId = cursor.getInt(ForecastFragment.COL_WEATHER_ID);
+        int weatherId = cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID);
 
         Log.v(LOG_TAG, "weather id" + weatherId);
         // Use placeholder image for now
